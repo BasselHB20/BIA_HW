@@ -1,23 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Shipping Solution</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Caveat:wght@400..700&family=Faculty+Glyphic&family=Itim&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="static/styles/index.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Caveat:wght@400..700&family=Faculty+Glyphic&family=Itim&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="static/styles/index.css" />
 </head>
+
 <body class="custom-bg font-sans leading-normal tracking-normal">
     <div class="container mx-auto p-5">
         <!-- عنوان الصفحة -->
-        <h1 class="text-3xl font-bold text-center text-purple-700 mb-6">Shipping Solution Results</h1>
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">
+            Shipping Solution Results
+        </h1>
 
         <!-- عرض الطائرات مع الشحنات المخصصة لها -->
         <div id="bestSolutionContainer" class="mb-8 hidden">
-            <h2 class="text-2xl font-semibold text-blue-600 mb-4">Best Solution</h2>
+            <h2 class="text-2xl font-semibold text-purple-700 mb-4">
+                Best Solution
+            </h2>
             <div id="bestSolutionList" class="space-y-6">
                 <!-- سيتم إضافة الطائرات والشحنات هنا -->
             </div>
@@ -25,7 +33,9 @@
 
         <!-- عرض الشحنات غير المخصصة -->
         <div id="unallocatedShipmentsContainer" class="mb-8 hidden">
-            <h2 class="text-2xl font-semibold text-red-600 mb-4">Unallocated Shipments</h2>
+            <h2 class="text-2xl font-semibold text-red-600 mb-4">
+                Unallocated Shipments
+            </h2>
             <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
                 <thead class="bg-gray-200">
                     <tr>
@@ -41,8 +51,8 @@
 
         <!-- زر العودة والانتقال -->
         <div class="flex justify-center gap-5 mt-6">
-            <a class="bg-green-500 text-white px-5 py-3 rounded-lg shadow-lg hover:bg-green-600 transition" href="/">Back</a>
-            <button class="bg-blue-500 text-white px-5 py-3 rounded-lg shadow-lg hover:bg-blue-600 transition" onclick="navigateToShipmentsPage()">Next</button>
+            <a class="bg-green-500 text-white px-5 py-3 rounded-lg shadow-lg hover:bg-green-600 transition"
+                href="/">Back</a>
         </div>
     </div>
 
@@ -55,34 +65,41 @@
         console.log("Best Solution:", bestSolution);
         console.log("Unallocated Shipments:", unallocatedShipments);
 
+        const bestRoute = JSON.parse(localStorage.getItem("best_route"));
+        const bestDistance = localStorage.getItem("best_distance");
+
         // دالة لإنشاء صفوف في الجدول بناءً على الشحنات
         function generateTableRows(shipments) {
-            return shipments.map(shipment => {
-                const { name, weight, cost, city } = shipment;
-                return `
-                    <tr>
-                        <td class="py-2 px-4">${name || 'N/A'}</td>
-                        <td class="py-2 px-4">${weight || 'N/A'}</td>
-                        <td class="py-2 px-4">${cost}</td>
-                        <td class="py-2 px-4">${city}</td>
-                    </tr>
-                `;
-            }).join('');
+            return shipments
+                .map((shipment) => {
+                    const { name, weight, cost, city } = shipment;
+                    return `
+                          <tr>
+                              <td class="py-2 px-4">${name || "N/A"}</td>
+                              <td class="py-2 px-4">${weight || "N/A"}</td>
+                              <td class="py-2 px-4">${cost}</td>
+                              <td class="py-2 px-4">${city}</td>
+                          </tr>
+                      `;
+                })
+                .join("");
         }
 
         // دالة لعرض بيانات الطائرات والشحنات التي تخصها
         function displayResults() {
             // إذا كانت هناك بيانات لحلول الشحنات
             if (bestSolution && bestSolution.length > 0) {
-                const bestSolutionContainer = document.getElementById('bestSolutionContainer');
-                const bestSolutionList = document.getElementById('bestSolutionList');
+                const bestSolutionContainer = document.getElementById(
+                    "bestSolutionContainer"
+                );
+                const bestSolutionList = document.getElementById("bestSolutionList");
 
                 // تنظيف المحتوى القديم
-                bestSolutionList.innerHTML = '';
+                bestSolutionList.innerHTML = "";
 
                 // التجميع حسب الطائرات والشحنات التي تحملها
                 const planesData = {}; // لتخزين بيانات الطائرات والشحنات التي تحملها
-                bestSolution.forEach(pair => {
+                bestSolution.forEach((pair) => {
                     const shipment = pair[0];
                     const plane = pair[1];
 
@@ -90,7 +107,7 @@
                     if (!planesData[plane.name]) {
                         planesData[plane.name] = {
                             planeData: plane,
-                            shipments: []
+                            shipments: [],
                         };
                     }
                     planesData[plane.name].shipments.push(shipment);
@@ -107,48 +124,92 @@
 
                     // إضافة اسم الطائرة وسعتها
                     const planeSection = `
-                        <div class="border p-4 bg-white rounded-lg shadow-md">
-                            <h3 class="text-xl font-bold text-gray-800">Plane: ${planeData.planeData.name}</h3>
-                            <p class="text-sm text-gray-600">Capacity: ${planeData.planeData.capacity}</p>
-                            <table class="min-w-full mt-4 bg-white border border-gray-300 rounded-lg shadow-md">
-                                <thead class="bg-gray-200">
-                                    <tr>
-                                        <th class="py-2 px-4 text-left">Shipment ID</th>
-                                        <th class="py-2 px-4 text-left">Weight</th>
-                                        <th class="py-2 px-4 text-left">Cost</th>
-                                        <th class="py-2 px-4 text-left">Destination</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${generateTableRows(shipments)}
-                                </tbody>
-                            </table>
-                        </div>
-                    `;
+                              <div class="border p-4 bg-white rounded-lg shadow-md">
+                                  <h3 class="text-xl font-bold text-gray-800">Plane: ${planeData.planeData.name
+                        }</h3>
+                                  <p class="text-sm text-gray-600">Capacity: ${planeData.planeData.capacity
+                        }</p>
+                                  <table class="min-w-full mt-4 bg-white border border-gray-300 rounded-lg shadow-md">
+                                      <thead class="bg-gray-200">
+                                          <tr>
+                                              <th class="py-2 px-4 text-left">Shipment ID</th>
+                                              <th class="py-2 px-4 text-left">Weight</th>
+                                              <th class="py-2 px-4 text-left">Cost</th>
+                                              <th class="py-2 px-4 text-left">Destination</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                          ${generateTableRows(shipments)}
+                                      </tbody>
+                                  </table>
+                              </div>
+                          `;
                     bestSolutionList.innerHTML += planeSection;
                     displayedPlanes.add(planeName); // إضافة الطائرة إلى المجموعة المعروضة
                 }
 
-                bestSolutionContainer.classList.remove('hidden');
+                bestSolutionContainer.classList.remove("hidden");
             }
 
             // عرض الشحنات غير المخصصة
             if (unallocatedShipments && unallocatedShipments.length > 0) {
-                const unallocatedShipmentsContainer = document.getElementById('unallocatedShipmentsContainer');
-                const unallocatedShipmentsTable = document.getElementById('unallocatedShipmentsTable');
+                const unallocatedShipmentsContainer = document.getElementById(
+                    "unallocatedShipmentsContainer"
+                );
+                const unallocatedShipmentsTable = document.getElementById(
+                    "unallocatedShipmentsTable"
+                );
 
                 // تنظيف المحتوى القديم
-                unallocatedShipmentsTable.innerHTML = '';
+                unallocatedShipmentsTable.innerHTML = "";
 
                 const rows = generateTableRows(unallocatedShipments);
                 unallocatedShipmentsTable.innerHTML = rows;
 
-                unallocatedShipmentsContainer.classList.remove('hidden');
+                unallocatedShipmentsContainer.classList.remove("hidden");
             }
         }
+
+        root.innerHTML += `
+          <div class="flex flex-col gap-3 p-3 border-4 border-slate-400 m-4">
+          ${bestRoute
+                .map(
+                    (plane, planeIndex) => `
+              <div class="flex gap-2 flex-wrap">
+              <h2 class="text-2xl font-bold myFont text-purple-700">plane-${planeIndex + 1
+                        }:</h2>
+          ${plane
+                            .map(
+                                (city, index) => `
+            <div class="flex gap-2 items-center justify-center text-lg">
+              <p class="myFont">${city}</p>
+              ${index !== plane.length - 1
+                                        ? `<i class="fas fa-long-arrow-alt-right"></i>`
+                                        : ""
+                                    }
+            </div>
+          `
+                            )
+                            .join("")}
+          </div>
+      `
+                )
+                .join("")}
+
+            <div class="flex gap-2 items-center justify-center">
+            <h2 class="text-2xl font-bold myFont text-green-700">
+              Best Distance:
+            </h2>
+            <p class="text-lg font-semibold underline">
+            ${Number(bestDistance).toFixed(2)} KM
+            </p>
+            </div>
+          </div>
+      `;
 
         // عند تحميل الصفحة، سيتم عرض النتائج
         window.onload = displayResults;
     </script>
 </body>
+
 </html>

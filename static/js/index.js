@@ -127,7 +127,7 @@ function navigateToShipmentsPage() {
       console.log("Processed data from server:", data);
       if (data.success) {
           // إذا كانت العملية ناجحة، يتم التحويل إلى صفحة الشحنات
-          window.location.assign("/shipment_page"); // رابط صفحة الشحنات
+          window.location.assign("/templates/shipment.html"); // رابط صفحة الشحنات
       } else {
           console.error("Error from server:", data.error);
       }
