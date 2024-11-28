@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Planes Info</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="static/styles/index.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Caveat:wght@400..700&family=Faculty+Glyphic&family=Itim&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div
+      class="custom-bg min-h-screen max-md:text-center flex flex-col gap-3 justify-center items-center  myFont text-2xl"
+    >
+      <h1 class="font-bold text-3xl mb-3 text-purple-700">Planes Inputs</h1>
+      <label>
+        Planes Number
+        <input
+          id="planeCountInput"
+          type="number"
+          min="0"
+          class="mx-2 outline-none rounded px-2"
+        />
+      </label>
+      <div id="linesContainer"></div>
+      <div class="flex gap-3">
+        <a class="bg-green-500 p-3 rounded" href="/">Back</a>
+        <button type="submit" class="bg-green-500 p-2 rounded text-white" onclick="navigateToShipmentsPage()">Next</button>
+      </div>
+    </div>
+    <script src="../static/js/index.js"></script>
+  </body>
+</html>

@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.myFont {
+  font-family: "Itim", "sans-serif";
+}
+.full-height {
+  min-height: 100%;
+}
+
+html,
+body {
+  min-height: 100vh;
+  height: 100vh;
+}
+body, * {
+  padding: 0;
+  margin: 0;
+}
+.custom-bg {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 230, 172, 1),
+    rgba(149, 137, 199, 1)
+  );
+}
+
+.fontSerif {
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+.fontMono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+.animation-plane {
+  animation: moveAnimation 3s ease-in-out infinite;
+}
+
+@keyframes moveAnimation {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-50px, -50px); /* Move up and left */
+  }
+  50% {
+    transform: translate(-50px, 50px); /* Move down */
+  }
+  75% {
+    transform: translate(0, -50px); /* Move up and right */
+  }
+  100% {
+    transform: translate(0, 0); /* Back to original position */
+  }
+}
+@media not all and (min-width: 1024px) {
+  .icon {
+      display: none;
+  }
+}
