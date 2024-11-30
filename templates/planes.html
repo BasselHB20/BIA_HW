@@ -14,9 +14,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Caveat:wght@400..700&family=Faculty+Glyphic&family=Itim&display=swap" rel="stylesheet">
   </head>
   <body>
+      <!-- عنصر لعرض التحذيرات -->
+<div id="warningMessages" class="warning-messages"></div>
+
     <div
       class="custom-bg min-h-screen max-md:text-center flex flex-col gap-3 justify-center items-center  myFont text-2xl"
-    >
+    >        <!-- عنصر لعرض التحذيرات -->
+<!-- رسالة التحذير -->
+<div id="alertMessage" class="fixed top-5 left-1/2 transform -translate-x-1/2 max-w-lg w-full p-4 bg-red-200 text-red-800 border border-red-400 rounded shadow-lg hidden">
+  <span id="alertText" class="mr-2"></span>
+  <button id="closeAlert" class="text-xl font-bold text-red-800 bg-transparent hover:bg-red-300 rounded-full p-1 ml-2">
+    X
+  </button>
+</div>
       <h1 class="font-bold text-3xl mb-3 text-purple-700">Planes Inputs</h1>
       <label>
         Planes Number
@@ -30,9 +40,9 @@
       <div id="linesContainer"></div>
       <div class="flex gap-3">
         <a class="bg-green-500 text-white px-5 py-3 rounded-lg shadow-lg hover:bg-green-600 transition" href="/">Back</a>
-        <button type="submit" class="bg-green-500 text-white px-5 py-3 rounded-lg shadow-lg hover:bg-green-600 transition" onclick="navigateToShipmentsPage()">Next</button>
+        <button id="nextplanesButton" type="submit" class="bg-green-500 text-white px-5 py-3 rounded-lg shadow-lg hover:bg-green-600 transition" onclick="navigateToShipmentsPage()">Next</button>
       </div>
     </div>
-    <script src="../static/js/index.js"></script>
+    <script src="static/js/index.js"></script>
   </body>
 </html>

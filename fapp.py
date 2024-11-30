@@ -2,9 +2,6 @@ from flask import Flask, render_template, request, jsonify
 from Genetic_algorithm import ShipmentAllocator 
 from TSP import BestRoute
 from flask_cors import CORS
-import numpy as np
-import math
-import random
 app = Flask(__name__)
 CORS(app)
 

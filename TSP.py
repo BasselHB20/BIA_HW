@@ -83,6 +83,14 @@ class BestRoute:
 
     # Genetic Algorithm to find the best route
     def genetic_algorithm(self, population_size, generations, mutation_rate):
+        # Check if there are only two cities
+        if len(self.cities) == 2:
+            city1, city2 = list(self.cities.keys())
+            distance = self.haversine_distance(city1, city2)
+            print(f"New best route: [{city1}, {city2}] with distance {distance}")
+            return [city1, city2], distance
+        
+        # If more than two cities, proceed with the algorithm
         population = self.create_population(population_size)
         best_route = None
         best_distance = float('inf')
@@ -106,3 +114,4 @@ class BestRoute:
             population = new_population
 
         return best_route, best_distance
+
