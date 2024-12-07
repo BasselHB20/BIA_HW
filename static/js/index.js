@@ -1,4 +1,66 @@
-///////////////// planes page logic ///////////////////////
+// ERROR ALERTS
+const alertMessage = document.getElementById("alertMessage");
+const alertText = document.getElementById("alertText");
+const closeAlert = document.getElementById("closeAlert");
+
+///////////////// Planes Page Logic ///////////////////////
+document.addEventListener("DOMContentLoaded", function () {
+  // Check Inputs In Planes Page
+  const nextPlanesButton = document.getElementById("nextplanesButton");
+  let planeCountInput1 = document.getElementById("planeCountInput");
+
+  // Check Details Of Planes
+  if (nextPlanesButton && planeCountInput1) {
+      nextPlanesButton.addEventListener("click", function (e) {
+          const planeCountValue = planeCountInput1.value.trim();
+
+            // Hide Message
+          alertMessage.classList.add('hidden');
+          alertText.textContent = '';
+
+          // Check If Input Is Empty Or Incorrect
+          if (!planeCountValue || isNaN(planeCountValue) || parseInt(planeCountValue, 10) <= 0) {
+              alertText.textContent = "Please enter a valid number of planes.";
+              alertMessage.classList.remove('hidden');
+              planeCountInput.focus();
+              e.preventDefault();
+              return;
+          }
+
+          // Check Details Of Planes
+          let allValid = true;
+          planes.forEach((plane, index) => {
+              if (!plane.name.trim()) {
+                  allValid = false;
+                  alertText.textContent = `Please enter a valid name for Plane ${index + 1}.`;
+                  alertMessage.classList.remove('hidden'); // Show Message
+              }
+
+              if (!plane.capacity || plane.capacity <= 0) {
+                  allValid = false;
+                  alertText.textContent = `Please enter a valid capacity for Plane ${index + 1}.`;
+                  alertMessage.classList.remove('hidden'); // Show Message
+              }
+          });
+
+          // if !allValid Check
+          if (!allValid) {
+              e.preventDefault();
+              return;
+          }
+      });
+  }
+  
+  // Close ERROR Message
+  closeAlert.addEventListener('click', function () {
+      alertMessage.classList.add('hidden');
+  });
+
+  // Hide Message In 5s
+  setTimeout(function () {
+      alertMessage.classList.add('hidden');
+  }, 5000);
+});
 
 let currentPlaneCount = 0;
 let planes = [];
@@ -18,27 +80,27 @@ window.onload = function () {
   }
 };
 
-// planes number //////////////////////////////////////////////////////////////////////
+// Generate Inputs For The Planes
 const planeCountInput = document.getElementById("planeCountInput");
 
 if (planeCountInput)
-  document
-    .getElementById("planeCountInput")
-    .addEventListener("input", function () {
-      const desiredCount = parseInt(this.value, 10) || 0;
+document
+  .getElementById("planeCountInput")
+  .addEventListener("input", function () {
+    const desiredCount = parseInt(this.value, 10) || 0;
 
-      if (desiredCount > currentPlaneCount) {
-        for (let i = currentPlaneCount; i < desiredCount; i++) {
-          currentPlaneCount++;
-          addPlaneElement(currentPlaneCount);
-        }
-      } else if (desiredCount < currentPlaneCount) {
-        for (let i = currentPlaneCount; i > desiredCount; i--) {
-          removePlaneElement(i);
-          currentPlaneCount--;
-        }
+    if (desiredCount > currentPlaneCount) {
+      for (let i = currentPlaneCount; i < desiredCount; i++) {
+        currentPlaneCount++;
+        addPlaneElement(currentPlaneCount);
       }
-    });
+    } else if (desiredCount < currentPlaneCount) {
+      for (let i = currentPlaneCount; i > desiredCount; i--) {
+        removePlaneElement(i);
+        currentPlaneCount--;
+      }
+    }
+  });
 
 function addPlaneElement(index) {
   const linesContainer = document.getElementById("linesContainer");
@@ -102,13 +164,14 @@ function removePlaneElement(index) {
   }
 }
 
-// Get planes from html page
+// Get Planes From HTML Page
 function navigateToShipmentsPage() {
-  if (planes.length === 0) return; // إذا كانت قائمة الطائرات فارغة
+  if (planes.length === 0) return;
   for (let i = 0; i < planes.length; i++) {
-    if (!planes[i].name || !planes[i].capacity) return; // إذا كانت البيانات غير مكتملة
+    if (!planes[i].name || !planes[i].capacity) return;
   }
-  // إرسال البيانات إلى الخادم عبر fetch
+
+  // Send Data To Server With Fetch
   fetch('/get_plane', {
     method: 'POST',
     headers: {
@@ -126,8 +189,7 @@ function navigateToShipmentsPage() {
   .then(data => {
       console.log("Processed data from server:", data);
       if (data.success) {
-          // إذا كانت العملية ناجحة، يتم التحويل إلى صفحة الشحنات
-          window.location.assign("/shipment_page"); // رابط صفحة الشحنات
+          window.location.assign("/shipment_page"); // Move to shipment_page
       } else {
           console.error("Error from server:", data.error);
       }
@@ -138,12 +200,14 @@ function navigateToShipmentsPage() {
 }
 
 
-////////////////// shipment logic //////////////////
-
+////////////////// SHIPMENT LOGIC //////////////////
 let currentShipmentCount = 0;
 let shipments = [];
+const nextShipmentButton = document.getElementById("nextshipmentButton");
+const shipmentCountInput = document.getElementById("shipmentCountInput");
 
-document
+document.addEventListener("DOMContentLoaded", function () {
+  document
   .getElementById("shipmentCountInput")
   .addEventListener("input", function () {
     const desiredCount = parseInt(this.value, 10) || 0;
@@ -161,6 +225,52 @@ document
     }
   });
 
+  // Check Details Of Shipments
+  if (nextShipmentButton && shipmentCountInput) {
+    nextShipmentButton.addEventListener("click", function (e) {
+      const shipmentCountValue = shipmentCountInput.value.trim();
+
+          // Hide Message
+          alertMessage.classList.add('hidden');
+          alertText.textContent = '';
+
+          // Check If Input Is Empty Or Incorrect
+      if (!shipmentCountValue || isNaN(shipmentCountValue) || parseInt(shipmentCountValue, 10) <= 0) {
+        alertText.textContent ="Please enter a valid number of shipments.";
+        alertMessage.classList.remove('hidden');
+        shipmentCountInput.focus();
+        e.preventDefault();
+        return;
+      }
+
+      // Check Details Of Shipment
+      let allValid = true;
+      shipments.forEach((shipment, index) => {
+        if (!shipment.name.trim()) {
+          allValid = false;
+          alert(`Please enter a valid name for Shipment ${index + 1}.`);
+        }
+
+        if (!shipment.weight || shipment.weight <= 0) {
+          allValid = false;
+          alert(`Please enter a valid weight for Shipment ${index + 1}.`);
+        }
+
+        if (!shipment.destination.trim()) {
+          allValid = false;
+          alert(`Please enter a valid destination for Shipment ${index + 1}.`);
+        }
+      });
+
+      if (!allValid) {
+        e.preventDefault();
+        return;
+      }
+    });
+  }
+});
+
+
 function addShipmentElement(index) {
   const shipmentsContainer = document.getElementById("shipmentsContainer");
 
@@ -172,12 +282,12 @@ function addShipmentElement(index) {
   const heading = document.createElement("h3");
   heading.className =
     "text-purple-700 bg-gray-300 w-fit p-2 rounded flex justify-center";
-  heading.textContent = `Shipment${index}`;
+  heading.textContent = `Shipment ${index}`;
 
   const shipmentNameInput = createInput(
     "text",
     "Enter shipment name",
-    "mx-2 mt-1 outline-none rounded px-2 w-40"
+    "mx-2 mt-1 outline-none rounded px-2 w-60"
   );
 
   const shipmentWeightInput = createInput(
@@ -277,10 +387,11 @@ function removeShipmentElement(index) {
   }
 }
 
-// إرسال الشحنات إلى الخادم
+// Send shipments To server
 function navigateToResultsPage() {
   if (shipments.length === 0) {
-    alert("لا توجد شحنات لإرسالها.");  // رسالة للمستخدم إذا كانت الشحنات فارغة
+    alertText.textContent = "Please enter a valid number of Shipment.";
+    alertMessage.classList.remove('hidden'); // Show Check Message
     return;
   }
 
@@ -291,12 +402,27 @@ function navigateToResultsPage() {
       !shipments[i].cost ||
       !shipments[i].city
     ) {
-      alert("يرجى ملء جميع بيانات الشحنات.");  // رسالة للمستخدم إذا كانت البيانات غير مكتملة
+       alertText.textContent ="Please enter a valid data for Shipment";
+       alertMessage.classList.remove('hidden'); // Show message
       return;
     }
   }
 
-  // إرسال البيانات إلى الخادم عبر fetch
+  // Hide Message
+  alertMessage.classList.add('hidden');
+  alertText.textContent = '';
+
+  // Close ERROR Message
+  closeAlert.addEventListener('click', function () {
+    alertMessage.classList.add('hidden');
+  });
+
+  // Hide Message In 5s
+  setTimeout(function () {
+    alertMessage.classList.add('hidden');
+  }, 5000);
+
+  // Send Data To Server With Fetch
   fetch('/shipment_page', {
     method: 'POST',
     headers: {
@@ -313,14 +439,14 @@ function navigateToResultsPage() {
   .then(data => {
     console.log("Processed shipments data from server:", data);
     if (data.success) {
-      citypage(data.cities); 
+      citypage(data.cities);
     } else {
       console.error("Error from server:", data.error);
     }
   })
   .catch(error => {
     console.error("Error:", error);
-    alert("خطأ في الاتصال بالخادم: " + error.message);
+    alert("Error from server: please enter correct data " + error.message);
   });
 }
 
@@ -353,5 +479,4 @@ function citypage(cities) {
     console.error("Error:", error);
     alert("Error connecting to the server when sending cities: " + error.message);
   });
- 
 }

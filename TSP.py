@@ -7,7 +7,6 @@ class BestRoute:
     def __init__(self, cities, central_city):
         self.cities = cities
         self.central_city = central_city
-       
 
     # Function to calculate distance using Haversine formula
     def haversine_distance(self, city1, city2):
@@ -27,8 +26,8 @@ class BestRoute:
     # Function to calculate total distance for a given route
     def total_distance(self, route):
         distance = 0
-        for i in range(len(route)):
-            distance += self.haversine_distance(route[i], route[(i + 1) % len(route)])
+        for i in range(len(route) - 1):
+            distance += self.haversine_distance(route[i], route[i + 1])
         return distance
 
     # Create initial population of routes
@@ -41,7 +40,6 @@ class BestRoute:
             raise ValueError(f"The central city '{self.central_city}' is not in the list of cities.")
         if len(all_cities) == 0:
             raise ValueError("No cities available for sampling after removing the central city.")
-        #all_cities.remove(self.central_city)  # Remove the central city from the random list
         for _ in range(size):
             route = [self.central_city] + random.sample(all_cities, len(all_cities))
             population_init.append(route)
@@ -56,15 +54,11 @@ class BestRoute:
         best_indices = np.argsort(fitness)[:num_best]
         return [population[i] for i in best_indices]
 
-    # Generate a child route using crossover
+   # Generate a child route using crossover
     def crossover(self, route1, route2):
-        if len(route1) < 1 or len(route2) < 1:
+        if len(route1) < 2 or len(route2) < 2:
             raise ValueError("Routes must contain at least 2 cities to perform crossover.")
-        try:
-            start, end = sorted(random.sample(range(len(route1)), 2))
-        except ValueError:
-            raise ValueError("Sample larger than population or is negative. Ensure routes have at least 2 elements.")
-        # start, end = sorted(random.sample(range(len(route1)), 2))
+        start, end = sorted(random.sample(range(len(route1)), 2))
         child = [None] * len(route1)
         child[start:end] = route1[start:end]
         pointer = 0
@@ -114,4 +108,3 @@ class BestRoute:
             population = new_population
 
         return best_route, best_distance
-
