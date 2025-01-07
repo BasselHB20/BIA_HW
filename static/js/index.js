@@ -466,10 +466,10 @@ function citypage(cities) {
     return response.json();
   })
   .then(data => {
-    console.log("Response from Flask:", data); // Print the returned data from Flask file
+    //console.log("Response from Flask:", data); // Print the returned data from Flask file
     if (data.success) {
-      localStorage.setItem('best_route', JSON.stringify(data.best_route));
-      localStorage.setItem('best_distance', data.best_distance);
+      const routesInfo = data.routes_info;
+      localStorage.setItem('routes_info', JSON.stringify(routesInfo));
       window.location.assign("/result_page"); // Then direct the user to result page and display the final result
     } else {
       console.error("Error from Flask:", data.error);

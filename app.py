@@ -6,15 +6,15 @@ app = Flask(__name__)
 
 # Longitude and latitude lines for the cities
 CITIES_COORDINATES = {
-    "Damascus": (33.513, 36.292),
-    "Aleppo": (36.215, 37.159),
-    "Homs": (34.732, 36.713),
-    "Latakia": (35.523, 35.791),
-    "Hama": (35.132, 36.752),
-    "Deir ez-Zor": (35.336, 40.137),
-    "As-Suwayda": (32.710, 36.566),
-    "Tartus": (34.892, 35.886),
-    "Idlib": (35.930, 36.633),
+    "Damascus": (36.276, 33.513),
+    "Aleppo": (37.159, 37.161),
+    "Homs": (36.717, 34.733),
+    "Latakia": (35.788, 35.529),
+    "Hama": (36.733, 35.133),
+    "Deir ez-Zor": (40.128, 32.507),
+    "As-Suwayda": (36.703, 32.633),
+    "Tartus": (35.883, 34.895),
+    "Idlib": (36.883, 35.884),
     'Daraa': (36.1025, 32.6253)
 }
 
@@ -101,17 +101,16 @@ def process_shipments():
 # process the TSP file and execute genetic algorithm
 @app.route('/city_page', methods=['POST'])
 def process_cities():
+    global planes
     try:
         # 1 Get cities of transported cargo
         city_data = request.get_json()
         if not city_data or 'cities' not in city_data:
             return jsonify({'success': False, 'error': 'Invalid or missing city data'}), 400
 
-        # 2 Declare 2 lists, to fill them with best routes and best distances
+        # 2 Declare dictionaries to fill them with best routes and best distances
+        routes_info = []  # List to store dictionaries with plane ID, name, best route, and best distance
         cities = city_data['cities']
-        best_routes = []
-        best_distances = []
-
         # 3 Declare a dictionary, then fill it with an empty dictionaries for each plane
         cities_with_coordinates = {}
         for key in cities.keys():
@@ -121,31 +120,28 @@ def process_cities():
         if "Damascus" in CITIES_COORDINATES:
             for key in cities_with_coordinates.keys():
                 cities_with_coordinates[key]["Damascus"] = CITIES_COORDINATES["Damascus"]
-
                 for city in cities[key]:
                     if city in CITIES_COORDINATES:  # Check if the city exists in the coordinates dictionary
-                        cities_with_coordinates[key][city] = CITIES_COORDINATES[city]    # Map city to its coordinates
-
-        # 5 Make an object from class (BestRoute) and call the constructor
-        #  then execute the genetic algorithm for each plane
-        # and store the results in lists
+                        cities_with_coordinates[key][city] = CITIES_COORDINATES[city]  # Map city to its coordinates
+        # 5 Execute the genetic algorithm for each plane and store the results in the dictionaries
         for key in cities_with_coordinates.keys():
             object_route = BestRoute(cities_with_coordinates[key], 'Damascus')
             best_route, best_distance = object_route.genetic_algorithm(10, 50, 0.01)
-            best_routes.append(best_route)
-            best_distances.append(best_distance)
-
-        print(best_routes)
-        print(best_distances)
-
-        # 6 Return the variables to Js
+            # Create a dictionary with plane information
+            plane_id = next((plane['index'] for plane in planes if plane['name'] == key), 'Unknown ID')
+            route_info = {
+                'id':plane_id,
+                'name': key, 
+                'route': best_route,
+                'distance': best_distance
+            }
+            routes_info.append(route_info)  # Add the info to the list
+        # 6 Return the routes information to JS
         return jsonify({
             'success': True,
-            'best_route': best_routes,
-            'best_distance': best_distances,
+            'routes_info': routes_info,  # Send the new list of routes information
             'message': 'Cities processed successfully'
         }), 200
-
     except Exception as e:
         print(f"Error processing cities request: {str(e)}")
         return jsonify({'success': False, 'error': f'Unknown error: {str(e)}'}), 500
@@ -157,4 +153,3 @@ def result_page():
         best_solution=best_solution_global,
         unallocated_shipments=unallocated_shipments_global
     )
-
